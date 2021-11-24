@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font-family: Calibri, sans-serif;
+      }
+      #container {
+        text-align: center;
+      }
+      table {
+        border-collapse: collapse;
+        font-size: 2em;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 50px;
+      }
+      colgroup,
+      tbody {
+        border: solid medium;
+      }
+      td {
+        border: solid thin;
+        height: 1.4em;
+        width: 1.4em;
+        text-align: center;
+        padding: 0;
+        outline: none;
+      }
+      button {
+        margin-top: 15px;
+        font-size: 1.2em;
+        color: white;
+        font-family: inherit;
+        border: none;
+        width: 100px;
+        height: 40px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .padd {
+        padding-bottom: 100px;
+      }
+      #solve-button {
+        background-color: rgb(91, 175, 91);
+      }
+      #clear-button {
+        background-color: rgb(160, 90, 90);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <h1 class="padd">Sudoku Solver!</h1>
+      <table id="sudoku-board" style="border: 2px solid black">
+        <colgroup>
+          <col />
+          <col />
+          <col />
+        </colgroup>
+        <colgroup>
+          <col />
+          <col />
+          <col />
+        </colgroup>
+        <colgroup>
+          <col />
+          <col />
+          <col />
+        </colgroup>
+        <tbody>
+          <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+          </tr>
+          <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+          </tr>
+          <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+          </tr>
+          <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+          </tr>
+          <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+          </tr>
+
+          <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+          </tr>
+          <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+          </tr>
+        </tbody>
+      </table>
+      <button id="solve-button">Solve!</button>
+      <button id="clear-button">Clear!</button>
+    </div>
+  </body>
+  <script type="text/javascript">
+    document.getElementById("sudoku-board").addEventListener("keyup", (e) => {
+      if (e.target && e.target.nodeName === "TD") {
+        const validNum = /[1-9]/;
+        let td = e.target;
+        if (td.innerText.length > 0 && validNum.test(td.innerText[0]))
+          td.innerText = td.innerText[0];
+        else td.innerText = "";
+      }
+    });
+    document.getElementById("solve-button").addEventListener("click", () => {
+      const boardString = boardToString();
+      const solution = solve(boardString);
+
+      if (solution) stringToBoard(solution);
+      else alert("Invalid Board!");
+    });
+    document.getElementById("clear-button").addEventListener("click", () => {
+      let td = document.getElementsByTagName("td");
+      for (let i = 0; i < td.length; i++) {
+        td[i].innerText = "";
+      }
+    });
+    function boardToString() {
+      let res = "";
+      let td = document.getElementsByTagName("td");
+      const validNum = /[1-9]/;
+      for (let i = 0; i < td.length; i++) {
+        if (validNum.test(td[i].innerText[0])) res += td[i].innerText[0];
+        else res += "-";
+      }
+      return res;
+    }
+    function stringToBoard(solution) {
+      let td = document.getElementsByTagName("td");
+      let currCell;
+      let validNum = /[1-9]/;
+      const cells = solution.split("");
+      for (let i = 0; i < td.length; i++) {
+        currCell = cells.shift();
+        if (validNum.test(currCell)) td[i].innerText = currCell;
+      }
+    }
+    function solve(boardString) {
+      if (boardInvalid(boardString.split(""))) {
+        return false;
+      }
+      return recursiveSolve(boardString);
+    }
+    function recursiveSolve(boardString) {
+      let board = boardString.split("");
+      if (boardIsSolved(board)) {
+        return board.join("");
+      }
+      let cellPossibilities = getNextCellAndPossibilities(board);
+      let nextUnsolvedCell = cellPossibilities.index;
+      let possiblities = cellPossibilities.choices;
+      for (let i = 0; i < possiblities?.length; i++) {
+        board[nextUnsolvedCell] = possiblities[i];
+        let solvedBoard = recursiveSolve(board.join(""));
+        if (solvedBoard) return solvedBoard;
+      }
+      return false;
+    }
+    function boardIsSolved(board) {
+      for (let i = 0; i < board.length; i++) {
+        if (board[i] === "-") return false;
+      }
+      return true;
+    }
+    function getNextCellAndPossibilities(board) {
+      for (let i = 0; i < board.length; i++) {
+        if (board[i] === "-") {
+          let existingValue = getIntersection(board, i);
+          let choices = ["1", "2", "3", "4", "5", "6", "7", "8", "9"].filter(
+            (num) => existingValue.indexOf(num) < 0
+          );
+          return { index: i, choices };
+        }
+      }
+    }
+    function getIntersection(board, i) {
+      return getRow(board, i)
+        .concat(getColumn(board, i))
+        .concat(getBoxes(board, i));
+    }
+    function boardInvalid(board) {
+      return !boardValid(board);
+    }
+    function boardValid(board) {
+      return rowsValid(board) && columnValid(board) && boxesValid(board);
+    }
+    function rowsValid(board) {
+      return [0, 9, 18, 27, 36, 45, 54, 63, 72]
+        .map((i) => getRow(board, i))
+        .reduce((validity, row) => {
+          return collectionValid(row) && validity;
+        }, true);
+    }
+    function columnValid(board) {
+      return [0, 1, 2, 3, 4, 5, 6, 7, 8]
+        .map((i) => getColumn(board, i))
+        .reduce((validity, column) => {
+          return collectionValid(column) && validity;
+        }, true);
+    }
+    function boxesValid(board) {
+      return [0, 3, 6, 27, 30, 33, 54, 57, 60]
+        .map((i) => getBoxes(board, i))
+        .reduce((validity, box) => {
+          return collectionValid(box) && validity;
+        }, true);
+    }
+    function getBoxes(board, i) {
+      // let result = [];
+      // for(let index=i;index<i+3;index+=9){
+      //   result=[...result,board.splice(index,index+3)];
+      // }
+      // return result;
+      let boxCol = Math.floor(i / 3) % 3;
+      let boxRow = Math.floor(i / 27);
+      let startingIndex = boxCol * 3 + boxRow * 27;
+      return [0, 1, 2, 9, 10, 11, 18, 19, 20].map(
+        (num) => board[startingIndex + num]
+      );
+    }
+    function getRow(board, i) {
+      let elem = Math.floor(i / 9) * 9;
+      return board.slice(elem, elem + 9);
+    }
+    function getColumn(board, i) {
+      let start = Math.floor(i % 9);
+      return [0, 1, 2, 3, 4, 5, 6, 7, 8].map((num) => board[start + num * 9]);
+    }
+    function collectionValid(collection) {
+      let freq = {};
+      for (let i = 0; i < collection.length; i++) {
+        if (collection[i] != "-") {
+          if (freq[collection[i]] === undefined) freq[collection[i]] = 1;
+          else return false;
+        }
+      }
+      return true;
+    }
+  </script>
+</html>
